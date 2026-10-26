@@ -1,0 +1,168 @@
+diff --git a/.devcontainer/.devcontainer.json b/.devcontainer/.devcontainer.json
+deleted file mode 100644
+index 88a7d51..0000000
+--- a/.devcontainer/.devcontainer.json
++++ /dev/null
+@@ -1,45 +0,0 @@
+-{
+-  "name": "Spring Boot com Java 25",
+-
+-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+-
+-  "features": {
+-    "ghcr.io/devcontainers/features/java:1": {
+-      "version": "25",
+-      "jdkDistro": "tem",
+-      "installMaven": true
+-    }
+-  },
+-
+-  "customizations": {
+-    "vscode": {
+-      "extensions": [
+-        "vscjava.vscode-java-pack",
+-        "vmware.vscode-boot-dev-pack"
+-      ],
+-      "settings": {
+-        "java.configuration.updateBuildConfiguration": "automatic",
+-        "spring.initializr.defaultLanguage": "Java",
+-        "spring.initializr.defaultJavaVersion": "25",
+-        "spring.initializr.defaultPackaging": "JAR",
+-        "spring.initializr.defaultOpenProjectMethod": "Open"
+-      }
+-    }
+-  },
+-
+-  "forwardPorts": [
+-    8888
+-  ],
+-
+-  "portsAttributes": {
+-    "8888": {
+-      "label": "Spring Boot",
+-      "onAutoForward": "openBrowser",
+-      "visibility": "private"
+-    }
+-  },
+-
+-  "postCreateCommand": "chmod +x mvnw && ./mvnw dependency:go-offline",
+-
+-  "remoteUser": "vscode"
+-}
+\ No newline at end of file
+diff --git a/api/src/main/java/br/edu/fatecfranca/api/AlunoController.java b/api/src/main/java/br/edu/fatecfranca/api/AlunoController.java
+deleted file mode 100644
+index fa06c3c..0000000
+--- a/api/src/main/java/br/edu/fatecfranca/api/AlunoController.java
++++ /dev/null
+@@ -1,98 +0,0 @@
+-
+-package br.edu.fatecfranca.api.controllers;
+-
+-
+-import java.util.List;
+-
+-
+-import org.springframework.http.HttpStatus;
+-import org.springframework.http.ResponseEntity;
+-import org.springframework.web.bind.annotation.DeleteMapping;
+-import org.springframework.web.bind.annotation.GetMapping;
+-import org.springframework.web.bind.annotation.PathVariable;
+-import org.springframework.web.bind.annotation.PostMapping;
+-import org.springframework.web.bind.annotation.PutMapping;
+-import org.springframework.web.bind.annotation.RequestBody;
+-import org.springframework.web.bind.annotation.RequestMapping;
+-import org.springframework.web.bind.annotation.RestController;
+-
+-
+-import br.edu.fatecfranca.api.models.Aluno;
+-import br.edu.fatecfranca.api.services.AlunoService;
+-
+-
+-@RestController
+-@RequestMapping("/alunos")
+-public class AlunoController {
+-
+-
+-   private final AlunoService service;
+-
+-
+-   public AlunoController(AlunoService service) {
+-       this.service = service;
+-   }
+-
+-
+-   @GetMapping
+-   public List<Aluno> listarTodos() {
+-       return service.listarTodos();
+-   }
+-
+-
+-   @GetMapping("/{id}")
+-   public ResponseEntity<Aluno> buscarPorId(@PathVariable String id) {
+-       return service.buscarPorId(id)
+-               .map(ResponseEntity::ok)
+-               .orElse(ResponseEntity.notFound().build());
+-   }
+-
+-
+-   @PostMapping
+-   public ResponseEntity<Aluno> criar(@RequestBody Aluno aluno) {
+-       Aluno alunoSalvo = service.salvar(aluno);
+-
+-
+-       return ResponseEntity
+-               .status(HttpStatus.CREATED)
+-               .body(alunoSalvo);
+-   }
+-
+-
+-   @PutMapping("/{id}")
+-   public ResponseEntity<Aluno> atualizar(
+-           @PathVariable String id,
+-           @RequestBody Aluno aluno) {
+-
+-
+-       if (service.buscarPorId(id).isEmpty()) {
+-           return ResponseEntity.notFound().build();
+-       }
+-
+-
+-       aluno.setId(id);
+-
+-
+-       Aluno alunoAtualizado = service.salvar(aluno);
+-
+-
+-       return ResponseEntity.ok(alunoAtualizado);
+-   }
+-
+-
+-   @DeleteMapping("/{id}")
+-   public ResponseEntity<Void> excluir(@PathVariable String id) {
+-
+-
+-       if (service.buscarPorId(id).isEmpty()) {
+-           return ResponseEntity.notFound().build();
+-       }
+-
+-
+-       service.excluir(id);
+-
+-
+-       return ResponseEntity.noContent().build();
+-   }
+-}
+-
+diff --git a/api/src/main/resources/application.properties.example b/api/src/main/resources/application.properties.example
+index 80b9adf..2948799 100644
+--- a/api/src/main/resources/application.properties.example
++++ b/api/src/main/resources/application.properties.example
+@@ -4,7 +4,6 @@ spring.application.name=api
+ # configura a porta da aplicação
+ server.port=8888
+ 
+-
+ # Desabilita (por enquanto) o acesso a danco de dados
+ spring.autoconfigure.exclude=org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
+ 

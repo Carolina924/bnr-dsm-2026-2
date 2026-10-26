@@ -4,7 +4,6 @@ spring.application.name=api
 # configura a porta da aplicação
 server.port=8888
 
-
 # Desabilita (por enquanto) o acesso a danco de dados
 spring.autoconfigure.exclude=org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
 
