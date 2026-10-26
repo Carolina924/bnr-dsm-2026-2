@@ -9,10 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
 
-  @GetMapping("/")
-  public String hello() {
-      return "API em funcionamento!";
-  }
+   @GetMapping("/")
+   public String hello() {
+       return "API em funcionamento!";
+   }
+
+
+   @GetMapping("/test")
+   public String test() {
+       return "Isto é um teste.";
+   }
 
 
 }
